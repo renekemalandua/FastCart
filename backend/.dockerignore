@@ -1,0 +1,40 @@
+# Dependências e builds
+node_modules
+npm-debug.log
+dist
+build
+coverage
+
+# Arquivos de configuração sensíveis
+.env
+.env.local
+.env.*.local
+
+# Arquivos de desenvolvimento
+*.log
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+
+# Testes
+test/
+tests/
+__tests__
+
+# Documentação desnecessária no build
+README.md
+LICENSE
+
+# Arquivos temporários
+tmp/
+temp/
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# Prisma (excluir apenas migrações antigas, seed opcional)
+#prisma/migrations/
+# prisma/seed.ts  # Comente se quiser incluir o seed no build
