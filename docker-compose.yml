@@ -76,7 +76,7 @@ services:
       - /app/node_modules
     networks:
       - fastcart-network
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   postgres_data:
