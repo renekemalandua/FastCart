@@ -65,7 +65,7 @@ export default function ProductGrid() {
           </div>
           <CardContent className="p-4">
             <h3 className="font-medium">{product.name}</h3>
-            <p className="font-bold mt-2">R$ {product.price.toFixed(2)}</p>
+            <p className="font-bold mt-2">Kz {product.price.toFixed(2)}</p>
           </CardContent>
           <CardFooter className="p-4 pt-0">
             <Button onClick={() => handleAddToCart(product.name)} className="w-full">

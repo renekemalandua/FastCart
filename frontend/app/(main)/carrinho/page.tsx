@@ -22,16 +22,16 @@ export default function CartPage() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>R$ 599,97</span>
+                  <span>Kz 599,97</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Frete</span>
-                  <span>R$ 0,00</span>
+                  <span>Kz 0,00</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>R$ 599,97</span>
+                  <span>Kz 599,97</span>
                 </div>
               </div>
             </CardContent>

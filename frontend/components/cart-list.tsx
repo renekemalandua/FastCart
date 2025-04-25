@@ -68,7 +68,7 @@ export default function CartList() {
 
                 <div className="flex-1">
                   <h3 className="font-medium">{item.name}</h3>
-                  <p className="font-bold mt-1">R$ {item.price.toFixed(2)}</p>
+                  <p className="font-bold mt-1">Kz {item.price.toFixed(2)}</p>
 
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-2">

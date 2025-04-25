@@ -16,8 +16,8 @@ export default function Header() {
     <header className="border-b sticky top-0 bg-background z-10">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="font-bold text-xl mr-4">
-            EShop
+          <Link href="/home" className="font-bold text-xl mr-4">
+            FastCart
           </Link>
 
           <div className="relative flex-1 max-w-xl">

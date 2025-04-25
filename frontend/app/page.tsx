@@ -2,11 +2,12 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { AuthContext, AuthContextType } from "@/context/AuthContext"
 
 // Componente de ícone do Google
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -32,12 +33,18 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 
 // Componente de formulário de login
 function LoginForm() {
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const {signIn} = useContext(AuthContext) as AuthContextType;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aqui você adicionaria a lógica de autenticação
-    console.log("Login com email:", email)
+
+    try {
+      await signIn({email});
+      console.log("Usuario Verificado com sucesso")
+    } catch (error) {
+      console.error("Erro no login:", error)
+    }
   }
 
   return (
