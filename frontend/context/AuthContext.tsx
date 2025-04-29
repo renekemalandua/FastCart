@@ -1,11 +1,8 @@
-
 'use client';
 
-
-
 import { createContext, useEffect, ReactNode, useState } from 'react';
-import { SignInRequest, recoverUserInformations } from '@/utils/auth'
 import { useRouter } from 'next/navigation';
+import { fastCartApi } from '@/utils/axios';
 
 export type User = {
     token: string;
@@ -21,24 +18,30 @@ export type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-
     const [user, setUser] = useState<User | null>(null);
     const isAuthenticated = !!user;
 
     const router = useRouter();
 
-    async function SignIn({ email }: { email: string }) {
-        const data = await SignInRequest({ email });
+    async function signIn({ email }: { email: string }) {
+        try {
+            const response = await fastCartApi.post('/auth/login', { email });
 
-        setUser({
-            token: data.token,
-            email: data.email
-        })
-        router.push('/home');
+            const { sessionId, email: returnedEmail } = response.data;
+
+            setUser({
+                token: sessionId,
+                email: returnedEmail,
+            });
+
+            router.push('/home');
+        } catch (error) {
+            console.error('Erro ao fazer login', error);
+        }
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: isAuthenticated, user: user, signIn: SignIn }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, signIn }}>
             {children}
         </AuthContext.Provider>
     );
