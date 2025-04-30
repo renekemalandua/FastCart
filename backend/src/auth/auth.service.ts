@@ -6,14 +6,22 @@ import { randomUUID } from 'crypto';
 export class AuthService {
   constructor(private readonly redis: Redis) { }
 
-  async login(email: string): Promise<{ message: string; email: string; sessionId: string }> {
-    const sessionId = randomUUID();
-    await this.redis.set(`session:${sessionId}`, email, 'EX', 60 * 60);
-    return {
-      message: "User authenticated successfully",
-      email,
-      sessionId,
-    };
+  async login(email: string): Promise<{ message: string; email: string; sessionId?: string }> {
+    try {
+      const sessionId = randomUUID();
+      await this.redis.set(`session:${sessionId}`, email, 'EX', 60 * 60);
+      return {
+        message: "User authenticated successfully",
+        email,
+        sessionId,
+      };
+    } catch (error) {
+      return {
+        message: "Error to authenticate User",
+        email,
+      };
+    }
+
   }
 
   async getMe(sessionId: string) {
