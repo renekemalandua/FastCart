@@ -10,49 +10,74 @@ type ICreateProductSeed = {
 
 const productsToCreate: ICreateProductSeed[] = [
     {
-        name: "Tênis Esportivo Premium",
-        price: 299.99,
-        stock: 18,
+        name: "Caderno Universitário 200 folhas",
+        price: 1200,
+        stock: 50,
     },
     {
-        name: "Camiseta Básica Algodão",
-        price: 89.99,
-        stock: 7,
+        name: "Estojo Escolar com Zíper",
+        price: 850,
+        stock: 75,
     },
     {
-        name: "Relógio Inteligente Pro",
-        price: 499.99,
-        stock: 10,
+        name: "Mochila Escolar Infantil",
+        price: 5200,
+        stock: 30,
     },
     {
-        name: "Fones de Ouvido Bluetooth",
-        price: 199.99,
-        stock: 10,
+        name: "Conjunto de Lápis de Cor (24 unidades)",
+        price: 2100,
+        stock: 60,
     },
     {
-        name: "Mochila Impermeável",
-        price: 149.99,
-        stock: 12,
+        name: "Apontador com Depósito",
+        price: 400,
+        stock: 100,
     },
     {
-        name: "Óculos de Sol Polarizado",
-        price: 129.99,
-        stock: 5,
+        name: "Borracha Escolar Branca",
+        price: 250,
+        stock: 120,
+    },
+    {
+        name: "Régua Plástica 30cm",
+        price: 600,
+        stock: 80,
+    },
+    {
+        name: "Tesoura Escolar Sem Ponta",
+        price: 900,
+        stock: 45,
+    },
+    {
+        name: "Cola Branca 90g",
+        price: 500,
+        stock: 70,
+    },
+    {
+        name: "Bloco de Desenho A4",
+        price: 1500,
+        stock: 40,
+    },
+    {
+        name: "Canetas Esferográficas (Kit com 5)",
+        price: 800,
+        stock: 90,
+    },
+    {
+        name: "Transferidor Escolar 180°",
+        price: 300,
+        stock: 85,
     },
 ];
 
-async function main() {
-    for (const product of productsToCreate) {
-        await prisma.product.create({
-            data: product
-        })
+export async function productSeed() {
+    const productCount = await prisma.product.count();
+    if (productCount === 0) {
+        for (const product of productsToCreate) {
+            await prisma.product.create({
+                data: product
+            })
+        }
     }
 }
-
-main()
-    .catch((e) => {
-        throw e;
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });

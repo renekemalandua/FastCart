@@ -1,53 +1,39 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
+import { fastCartApi } from "@/utils/axios"
 
-// Dados de exemplo para produtos
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Tênis Esportivo Premium",
-    price: 299.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 2,
-    name: "Camiseta Básica Algodão",
-    price: 89.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 3,
-    name: "Relógio Inteligente Pro",
-    price: 499.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 4,
-    name: "Fones de Ouvido Bluetooth",
-    price: 199.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 5,
-    name: "Mochila Impermeável",
-    price: 149.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 6,
-    name: "Óculos de Sol Polarizado",
-    price: 129.99,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-]
+interface Product {
+  id: number
+  name: string
+  price: number
+  image: string
+}
 
 export default function ProductGrid() {
-  const [products] = useState(PRODUCTS)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fastCartApi.get("/products");
+        const data = await response.data;
+        console.log("products: ", data);
+        setProducts(data)
+      } catch (error) {
+        toast({ title: "Erro ao carregar produtos", description: "Tente novamente mais tarde." })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const handleAddToCart = (productName: string) => {
     toast({
@@ -55,6 +41,8 @@ export default function ProductGrid() {
       description: `${productName} foi adicionado ao carrinho.`,
     })
   }
+
+  if (loading) return <p className="text-center w-full">Carregando produtos...</p>
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
