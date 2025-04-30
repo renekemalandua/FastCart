@@ -10,6 +10,11 @@ export class AuthController {
     return this.authService.login(email);
   }
 
+  @Post('logout')
+  logout(@Param('sessionId') sessionId: string) {
+    return this.authService.logout(sessionId);
+  }
+
   @Get('me/:sessionId')
   async getMe(@Param('sessionId') sessionId: string) {
     return this.authService.getMe(sessionId);

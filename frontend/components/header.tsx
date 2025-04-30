@@ -1,16 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Link from "next/link"
 import { Search, ShoppingCart, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
+import { AuthContext } from "@/context/AuthContext"
 
 export default function Header() {
-  const [cartCount, setCartCount] = useState(3)
-  const userEmail = "usuario@exemplo.com"
+  const [cartCount, setCartCount] = useState(4);
+  const userEmail = "usuario@exemplo.com";
+  const { signOut, user } = useContext(AuthContext)!;
+  console.log("User: ", user);
 
   return (
     <header className="border-b sticky top-0 bg-background z-10">
@@ -26,7 +29,7 @@ export default function Header() {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden md:inline-block">{userEmail}</span>
+            <span className="text-sm text-muted-foreground hidden md:inline-block">{user?.email}</span>
 
             <Link href="/carrinho" className="relative">
               <ShoppingCart className="h-5 w-5" />
@@ -48,7 +51,7 @@ export default function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Visualizar Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Terminar Sessão</DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut}>Terminar Sessão</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

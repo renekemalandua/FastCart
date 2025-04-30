@@ -34,7 +34,7 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 // Componente de formulário de login
 function LoginForm() {
   const [email, setEmail] = useState("");
-  const authContext = useContext(AuthContext)
+  const authContext = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,9 +42,9 @@ function LoginForm() {
     try {
       if (!authContext) return;
       await authContext.signIn({ email });
-      console.log("Usuario Verificado com sucesso")
+      return console.log("Usuario Verificado com sucesso")
     } catch (error) {
-      console.error("Erro no login:", error)
+      return console.error("Erro no login:", error)
     }
   }
 
