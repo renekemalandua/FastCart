@@ -1,48 +1,81 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Image from "next/image"
 import { Minus, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { fastCartApi } from "@/utils/axios"
+import { AuthContext } from "@/context/AuthContext"
 
-// Dados de exemplo para o carrinho
-const CART_ITEMS = [
-  {
-    id: 1,
-    name: "Tênis Esportivo Premium",
-    price: 299.99,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    name: "Camiseta Básica Algodão",
-    price: 89.99,
-    quantity: 2,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Relógio Inteligente Pro",
-    price: 499.99,
-    quantity: 1,
-    image: "/placeholder.svg?height=100&width=100",
-  },
-]
+interface CartItem {
+  productId: number
+  name: string
+  price: number
+  quantity: number
+  image: string
+}
 
 export default function CartList() {
-  const [cartItems, setCartItems] = useState(CART_ITEMS)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const { user } = useContext(AuthContext)!;
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return
-
-    setCartItems(cartItems.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
+  const fetchCartItems = async () => {
+    try {
+      const response = await fastCartApi.get(`/cart/list/${user?.email}`)
+      setCartItems(response.data)
+    } catch (error) {
+      console.error("Erro ao buscar o carrinho:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const removeItem = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id))
+  useEffect(() => {
+    if (user?.email) {
+      fetchCartItems()
+    }
+  }, [user])
+
+  const updateQuantity = async (productId: number, newQuantity: number) => {
+    if (newQuantity < 1) return
+
+    try {
+      await fastCartApi.patch("/cart/update", {
+        email: user?.email,
+        productId,
+        newQuantity,
+      })
+
+      setCartItems((items) =>
+        items.map((item) =>
+          item.productId === productId ? { ...item, quantity: newQuantity } : item
+        )
+      )
+    } catch (error) {
+      console.error("Erro ao atualizar quantidade:", error)
+    }
+  }
+
+  const removeItem = async (productId: number) => {
+    try {
+      await fastCartApi.delete(`/cart/remove/${user?.email}/${productId}`)
+      setCartItems((items) => items.filter((item) => item.productId !== productId))
+    } catch (error) {
+      console.error("Erro ao remover item:", error)
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p>Carregando carrinho...</p>
+        </CardContent>
+      </Card>
+    )
   }
 
   if (cartItems.length === 0) {
@@ -60,7 +93,7 @@ export default function CartList() {
       <CardContent className="p-6">
         <div className="space-y-6">
           {cartItems.map((item) => (
-            <div key={item.id}>
+            <div key={item.productId}>
               <div className="flex gap-4">
                 <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
                   <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
@@ -76,7 +109,7 @@ export default function CartList() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
@@ -85,13 +118,13 @@ export default function CartList() {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
 
-                    <Button variant="ghost" size="icon" onClick={() => removeItem(item.id)}>
+                    <Button variant="ghost" size="icon" onClick={() => removeItem(item.productId)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

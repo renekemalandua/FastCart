@@ -11,10 +11,8 @@ import { AuthContext } from "@/context/AuthContext"
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(4);
-  const userEmail = "usuario@exemplo.com";
   const { signOut, user } = useContext(AuthContext)!;
-  console.log("User: ", user);
-
+  
   return (
     <header className="border-b sticky top-0 bg-background z-10">
       <div className="container mx-auto px-4 py-3">

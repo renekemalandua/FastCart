@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             sessionStorage.setItem('sessionId', sessionId);
 
             router.push('/home');
-            fetchUser();
+            await fetchUser();
         } catch (error) {
             console.error('Erro ao fazer login', error);
         }
