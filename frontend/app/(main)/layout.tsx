@@ -18,13 +18,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <AuthProvider>
-      <>
-        <body className={inter.className}>
-          <Header />
+
+    <>
+      <body className={inter.className}>
+        <AuthProvider><Header />
           {children}
-        </body>
-      </>
-    </AuthProvider>
+        </AuthProvider>
+      </body>
+    </>
+
   )
 }

@@ -16,11 +16,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+
+  /* const pathname = usePathname();
+  const hideHeader = ["/login", "/register"].includes(pathname); */
   return (
-    <AuthProvider>
-      <html lang="pt-BR">
-        <body className={inter.className}>{children}</body>
-      </html>
-    </AuthProvider>
+
+    <html lang="pt-BR">
+      <body className={inter.className}>
+        <AuthProvider>
+          {/* {!hideHeader && <Header />} */}
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
+
   )
 }

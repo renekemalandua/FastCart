@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { fastCartApi } from "@/utils/axios"
+import { AuthContext } from "@/context/AuthContext"
 
 interface Product {
   id: number
@@ -17,6 +18,7 @@ interface Product {
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const { user } = useContext(AuthContext)!;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,11 +37,24 @@ export default function ProductGrid() {
     fetchProducts()
   }, [])
 
-  const handleAddToCart = (productName: string) => {
-    toast({
-      title: "Produto adicionado",
-      description: `${productName} foi adicionado ao carrinho.`,
-    })
+  const handleAddToCart = async (productId: number, productName: string) => {
+    try {
+      await fastCartApi.post("/cart/add", {
+        email: user?.email,
+        productId,
+        quantity: 1,
+      });
+
+      toast({
+        title: "Produto adicionado",
+        description: `${productName} foi adicionado ao carrinho.`,
+      })
+    } catch (error) {
+      toast({
+        title: "Erro ao adicionar produto",
+        description: "Tente novamente mais tarde.",
+      })
+    }
   }
 
   if (loading) return <p className="text-center w-full">Carregando produtos...</p>
@@ -56,7 +71,7 @@ export default function ProductGrid() {
             <p className="font-bold mt-2">Kz {product.price.toFixed(2)}</p>
           </CardContent>
           <CardFooter className="p-4 pt-0">
-            <Button onClick={() => handleAddToCart(product.name)} className="w-full">
+            <Button onClick={() => handleAddToCart(product.id, product.name)} className="w-full">
               Adicionar ao Carrinho
             </Button>
           </CardFooter>
